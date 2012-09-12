@@ -1,0 +1,119 @@
+<project name="CSPlugin" default="jar" basedir=".">
+	
+	<!--
+			Properties for the project should be set and modified in the
+			build.properties file (located in the same folder as this build.xml file).
+
+			This file should be edited ONLY if you know what you are doing.
+	-->
+	<property file="build.properties" />
+	
+	<!--
+			Definition of xjc task for jaxb support
+	--> 
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">  
+		<classpath>  
+			<fileset dir="/Users/jvillaveces/dev/jaxb-ri/lib" includes="*.jar" />  
+		</classpath>  
+	</taskdef>
+	
+	<description>
+		${ant.description}
+	</description>
+	
+	<property name="project.jar.name" value="${project.name}.jar"/>
+	<property name="src.dir"     value="src"/>
+	<property name="build.dir" location="build"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+	<property name="jar.dir" location="${build.dir}/jar"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="icons.dir" location="${src.dir}"/>
+	
+	<property name="line" value="------------------------------------------------------------------------------------------------" />
+	
+	<path id="classpath">
+		<fileset dir="${classpath.local.location}" includes="${classpath.local.include}" />
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="generateKeggMLClasses" description="Generate Java classes from KeggML DTD with JAXB's xjc">    
+	   <xjc destdir="${src.dir}" package="org.cytoscape.KGML.generated" schema="KGML_v0.7.1_.dtd">
+	   		<arg value="-dtd" /> 
+	   </xjc>  
+	</target> 
+	
+	<target name="clean">
+		<echo>
+			${line}
+				Cleaning the mess!
+			${line}
+		</echo>
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="compile"  depends="clean">
+			<echo>
+			    ${line}
+				Building ${project.name} for Cytoscape
+			    ${line}
+			        src path	${src.dir}
+			        build path 	${build.dir}
+			        classpath.local	${classpath.local.location}
+			        java version	${java.target.version}
+			    ${line}
+			</echo>
+			<mkdir dir="${classes.dir}"/>
+			<javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" source="${java.target.version}" target="${java.target.version}" >
+				<classpath>
+					<path refId="classpath"/>
+				</classpath>	
+			</javac>
+		</target>
+		
+		<target name="jar" depends="compile">
+			<echo>
+				${line}
+					Creating ${project.jar.name}
+				${line}
+			</echo>
+			
+			<copy file="plugin.props" todir="${classes.dir}/${source.package}" filtering="true"
+		          overwrite="true"/>
+			
+			<copy file="${src.dir}/${source.package}/util/plugin.properties" todir="${classes.dir}/${source.package}/util" filtering="true"
+					          overwrite="true"/>
+			
+			<copy todir="${classes.dir}/org/cytoscape/icons">
+			  <fileset dir="${src.dir}/org/cytoscape/icons"
+			           includes="*.png"/>
+			</copy>
+			
+			
+			<unjar dest="${classes.dir}">
+				<fileset dir="${lib.dir}">
+			    	<include name="*.jar" />
+					<exclude name = "cytoscape.jar"/>
+			    </fileset>
+			</unjar>
+			
+			<jar jarfile="${jar.dir}/${project.jar.name}" basedir="${classes.dir}">
+				<manifest>
+					<attribute name="Cytoscape-Plugin" value="${source.baseclass}" />
+				</manifest>
+			</jar>
+		</target>
+		
+		<target name="move.jar">
+			<echo>
+			${line}
+				Moving ${project.jar.name} 
+					from ${jar.dir} 
+					to ${cytoscape.plugins.path}
+			${line}
+			</echo>
+			<copy file="${jar.dir}/${project.jar.name}" todir="${cytoscape.plugins.path}" filtering="true"
+		          overwrite="true"/>
+		</target>
+	
+	
+</project>
