@@ -73,13 +73,11 @@ public class Repository {
 	public boolean exists(){
 		try {
 			Item[] items = getIndexedOrganisms();
-			System.out.println("repository Exists -> "+items.length);
 			if(items.length>0){
 				return true;
 			}
 			return false;
 		} catch (Exception e) {
-			System.out.println("Exception when exists ");
 			e.printStackTrace();
 			return false;
 		}
@@ -259,8 +257,6 @@ public class Repository {
 		System.out.println(booleanQuery);*/
 		
 		Query query = new QueryParser(lVersion, RepositoryFields.GENE.getTag(), new StandardAnalyzer(lVersion)).parse(queryStr);
-		System.out.println(queryStr);
-		System.out.println(query);
 		IndexSearcherWrapper wrapper = search(query);
 		if(wrapper.size()>0){
 			return true;

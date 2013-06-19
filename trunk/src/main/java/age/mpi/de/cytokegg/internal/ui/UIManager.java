@@ -1,6 +1,9 @@
 package age.mpi.de.cytokegg.internal.ui;
 
+import java.awt.Dimension;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -10,6 +13,7 @@ import org.cytoscape.work.TaskIterator;
 
 import age.mpi.de.cytokegg.internal.CKController;
 import age.mpi.de.cytokegg.internal.repository.Repository;
+import age.mpi.de.cytokegg.internal.task.GEAExpressionTask;
 import age.mpi.de.cytokegg.internal.task.IndexBuilderTask;
 import age.mpi.de.cytokegg.internal.util.PluginProperties;
 
@@ -19,6 +23,7 @@ public class UIManager {
 	private static UIManager instance = new UIManager();
 	private JFrame reference;
 	private JDialog repositoryDialog, browsePathDialog, dataSetDialog, pathwaySelectionDialog, CURRENT;
+	private Map<String, JFrame> expWindows = new HashMap<String, JFrame>();
 	
 	/**
 	 * Constructor, private because of singleton
@@ -127,5 +132,18 @@ public class UIManager {
 	
 	public JFrame getReference(){
 		return reference;
+	}
+	
+	public void openExpressionWindow(String id) {
+		if(expWindows.containsKey(id) && expWindows.get(id) != null){
+    		expWindows.get(id).setVisible(true);
+    	}else{
+	    	GEAExpressionTask task = new GEAExpressionTask(id);
+	        CKController.getInstance().getDialogTaskManager().execute(new TaskIterator(task));
+    	}
+	}
+	
+	public void addExpressionFrame(String id, JFrame frame){
+		expWindows.put(id, frame);
 	}
 }

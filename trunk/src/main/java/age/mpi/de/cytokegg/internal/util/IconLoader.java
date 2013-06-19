@@ -32,6 +32,7 @@ public class IconLoader {
 	private ImageIcon MAGNIFIER_IMG;
 	private ImageIcon PLAY_IMG;
 	private ImageIcon STOP_IMG;
+	private ImageIcon TIME_IMG;
 
 	/**
 	 * Constructor, private because of singleton
@@ -105,6 +106,12 @@ public class IconLoader {
 		if(STOP_IMG == null)
 			STOP_IMG = new ImageIcon(getClass().getResource("/icons/control_stop.png"));
 		return STOP_IMG;
+	}
+	
+	public ImageIcon getTimeIcon(){
+		if(TIME_IMG == null)
+			TIME_IMG = new ImageIcon(getClass().getResource("/icons/time.png"));
+		return TIME_IMG;
 	}
 	
 }
