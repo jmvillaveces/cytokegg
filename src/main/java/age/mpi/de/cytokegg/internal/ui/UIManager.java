@@ -78,7 +78,7 @@ public class UIManager {
 		}
 	}
 	
-	private void checkRepository(final String action) throws IOException{
+	private void checkRepository(final String action) throws Exception{
     	if(!Repository.getInstance().exists()){
     		
     		int answer = JOptionPane.showConfirmDialog(reference, "It seems like the pathway index has not been created yet.\n"
@@ -89,10 +89,12 @@ public class UIManager {
     		}
     	}else{
 			if(action.equals("repository")){
+				((RepositoryDialog) repositoryDialog).update();
 				setVisibleDialog(DialogEnum.REPOSITORY);
 			}else if(action.equals("browse")){
 				setVisibleDialog(DialogEnum.BROWSEPATHWAYDIALOG);
 			}else if(action.equals("dataset")){
+				((DataSetDialog) dataSetDialog).update();
 				setVisibleDialog(DialogEnum.DATASET);
 			}
 		}

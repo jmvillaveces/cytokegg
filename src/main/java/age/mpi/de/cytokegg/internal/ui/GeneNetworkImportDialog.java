@@ -42,6 +42,10 @@ import javax.swing.border.TitledBorder;
 import org.apache.lucene.index.CorruptIndexException;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyTableUtil;
+import org.cytoscape.model.events.NetworkAboutToBeDestroyedEvent;
+import org.cytoscape.model.events.NetworkAboutToBeDestroyedListener;
+import org.cytoscape.model.events.NetworkAddedEvent;
+import org.cytoscape.model.events.NetworkAddedListener;
 import org.cytoscape.work.TaskIterator;
 
 import age.mpi.de.cytokegg.internal.CKController;
@@ -50,7 +54,7 @@ import age.mpi.de.cytokegg.internal.task.DataSetNetworkIndexingTask;
 import age.mpi.de.cytokegg.internal.util.IconLoader;
 import age.mpi.de.cytokegg.internal.util.Item;
 
-public class GeneNetworkImportDialog extends JDialog {
+public class GeneNetworkImportDialog extends JDialog implements NetworkAddedListener, NetworkAboutToBeDestroyedListener {
 	
 	private JComboBox networkList;
 	private JComboBox nameList;
@@ -67,14 +71,14 @@ public class GeneNetworkImportDialog extends JDialog {
 		
 		//North Panel
     	{		
-    		JButton refresh = new JButton(IconLoader.getInstance().getRefreshIcon());
+    		/*JButton refresh = new JButton(IconLoader.getInstance().getRefreshIcon());
     		refresh.setToolTipText("Refresh");
     		refresh.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					init();
 				}
-    		});
+    		});*/
     		
     		//Network List
     		networkList = new JComboBox();
@@ -97,9 +101,9 @@ public class GeneNetworkImportDialog extends JDialog {
     		north.add(new JLabel("Network :"));
     		north.add(networkList);
     		
-    		JPanel aux = new JPanel();
+    		/*JPanel aux = new JPanel();
     		aux.add(refresh);
-    		north.add(aux);
+    		north.add(aux);*/
     		
     		north.add(new JLabel("Name Attribute :"));
     		north.add(nameList);
@@ -208,5 +212,28 @@ public class GeneNetworkImportDialog extends JDialog {
 			}
 		}
 		centerPanel.updateUI();
+	}
+
+	@Override
+	public void handleEvent(NetworkAboutToBeDestroyedEvent e) {
+		
+		CyNetwork net = e.getNetwork();
+		
+		DefaultComboBoxModel model = (DefaultComboBoxModel) networkList.getModel();
+		for(int i=0; i<model.getSize(); i++){
+			Item item = (Item) model.getElementAt(i);
+			if(item.getId().equals(net.getSUID().toString())){
+				model.removeElementAt(i);
+				break;
+			}
+		}
+		refreshCheck();
+	}
+
+	@Override
+	public void handleEvent(NetworkAddedEvent e) {
+		CyNetwork net = e.getNetwork();
+		((DefaultComboBoxModel) networkList.getModel()).addElement(new Item(net.getSUID().toString(), net.getRow(net).get(CyNetwork.NAME, String.class)));
+		refreshCheck();
 	}
 }

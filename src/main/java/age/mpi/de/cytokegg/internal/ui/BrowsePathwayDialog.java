@@ -66,12 +66,8 @@ public class BrowsePathwayDialog extends JDialog{
     	
 		try {
 			orgs = Repository.getInstance().getIndexedOrganisms();
-		} catch (CorruptIndexException e2) {
-			e2.printStackTrace();
-		} catch (ParseException e2) {
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
+		} catch (Exception e) {
+			orgs = new Item[0];
 		}
 		
 		JPanel panel = new JPanel(new BorderLayout());

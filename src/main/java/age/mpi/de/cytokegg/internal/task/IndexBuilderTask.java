@@ -98,6 +98,7 @@ public class IndexBuilderTask extends AbstractTask{
 				interrupt();
 			}
 			
+			Repository.getInstance().initSearcher();
 			logger.info("Inedexed "+orgs.length+" organisms.");
 		}catch(Exception e){
 			logger.error("There was an error while writing to the index ", e);
