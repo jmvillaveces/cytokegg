@@ -97,17 +97,17 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		//GEA Panel
 		gBox = new JComboBox();
 		
-		JButton butt = new JButton(IconLoader.getInstance().getMagnifierIcon());
+		JButton butt = new JButton("find",IconLoader.getInstance().getMagnifierIcon());
 		butt.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//GUIManager.getInstance().openExpressionWindow(gBox.getSelectedItem().toString());
+				UIManager.getInstance().openExpressionWindow(gBox.getSelectedItem().toString());
 			}
 		});
 		
 		GEAExpression = new JPanel();
-		GEAExpression.setBorder(new TitledBorder("Select a gene"));
+		GEAExpression.setBorder(new TitledBorder("Expression Profile"));
 		
 		GEAExpression.add(gBox);
 		GEAExpression.add(butt);
@@ -199,11 +199,15 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 	        
 	        timeField = new JTextField(2+"");
 	        
+	        JLabel timeLabel = new JLabel();
+	        timeLabel.setIcon(IconLoader.getInstance().getTimeIcon());
+	        
 	        JPanel aux = new JPanel();
 	        aux.add(setButton);
 	        aux.add(playButton);
 	        aux.add(stopButton);
 	        aux.add(timeField);
+	        aux.add(timeLabel);
 	        
 	        JPanel conditionsPanel = new JPanel(new BorderLayout());
 	        conditionsPanel.setBorder(new TitledBorder("Gene Expression"));
