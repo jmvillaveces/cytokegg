@@ -143,16 +143,18 @@ public class DataSetDialog extends JDialog implements Updatable{
 		
 		Item[] dataSets = Repository.getInstance().getIndexedDataSets();
 		
-		if(dataSets == null || dataSets.length == 0){
-			delDS.setEnabled(false); 
-			search.setEnabled(false);
+		if(dataSets != null){
+			if(dataSets.length == 0){
+				delDS.setEnabled(false); 
+				search.setEnabled(false);
+			}
+			
+			DefaultListModel model = new DefaultListModel();
+			for(int i=0; i<dataSets.length; i++){
+				model.addElement(dataSets[i]);
+			}
+			dSetList.setModel(model);
 		}
-		
-		DefaultListModel model = new DefaultListModel();
-		for(int i=0; i<dataSets.length; i++){
-			model.addElement(dataSets[i]); 
-		}
-		dSetList.setModel(model);
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class Repository {
 		writerConfig = new IndexWriterConfig(lVersion, new StandardAnalyzer(lVersion));
 		try {
 			dir = FSDirectory.open(new File(path));
-			searcher = new IndexSearcher(DirectoryReader.open(dir));
+			initSearcher();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -73,12 +73,14 @@ public class Repository {
 	public boolean exists(){
 		try {
 			Item[] items = getIndexedOrganisms();
-			
+			System.out.println("repository Exists -> "+items.length);
 			if(items.length>0){
 				return true;
 			}
 			return false;
 		} catch (Exception e) {
+			System.out.println("Exception when exists ");
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -331,18 +333,12 @@ public class Repository {
         return items;
 	}
 	
-	private Query getQuery(String field, String queryStr, boolean escape, Operator op) throws ParseException, CorruptIndexException, IOException{
-		QueryParser qp = new QueryParser(lVersion, field, new StandardAnalyzer(lVersion));
-		
-		if(op != null)
-			qp.setDefaultOperator(op);
-		
-		Query query = (escape) ? qp.parse(QueryParser.escape(queryStr)) : qp.parse(queryStr);
-		return query;
-	}
-	
 	private IndexSearcherWrapper search(Query query) throws CorruptIndexException, IOException{
-        TopDocs hits = searcher.search(query, 1);
+        if(searcher == null){
+        	searcher = new IndexSearcher(DirectoryReader.open(dir));
+        }
+		
+		TopDocs hits = searcher.search(query, 1);
         
         if(hits.totalHits>1){
         	hits = searcher.search(query, hits.totalHits);
@@ -365,6 +361,10 @@ public class Repository {
 			}
 		}
 		System.out.println("");
+	}
+	
+	public void initSearcher() throws IOException{
+		searcher = new IndexSearcher(DirectoryReader.open(dir));
 	}
 	
 	/**

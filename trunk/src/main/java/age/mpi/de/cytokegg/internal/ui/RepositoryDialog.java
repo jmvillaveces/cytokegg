@@ -87,7 +87,7 @@ public class RepositoryDialog extends JDialog implements Updatable {
 			list.setCellRenderer(new ItemRenderer());
 	        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	        list.setModel(new DefaultListModel());
-			update();
+			//update();
 	       
 		}
 		
@@ -120,9 +120,12 @@ public class RepositoryDialog extends JDialog implements Updatable {
 	public void update() throws Exception {
 		DefaultListModel model = (DefaultListModel) list.getModel();
 		model.clear();
-		for(Item i : Repository.getInstance().getIndexedOrganisms()){
-			model.addElement(i);
+		Item[] orgs = Repository.getInstance().getIndexedOrganisms();
+		if(orgs != null){
+			for(Item i : orgs){
+				model.addElement(i);
+			}
+			list.clearSelection();
 		}
-		list.clearSelection();
 	}
 }
