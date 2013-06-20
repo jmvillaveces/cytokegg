@@ -127,7 +127,10 @@ public class Repository {
 		
 		IndexWriter indexWriter = new IndexWriter(dir, writerConfig);
 		indexWriter.deleteDocuments(organism);
+		indexWriter.commit();
 		indexWriter.close();
+		
+		initSearcher();
 	}
 	
 	public String[] getGenesByPathway(String pathwayId) throws CorruptIndexException, IOException{
@@ -181,7 +184,10 @@ public class Repository {
 		
 		IndexWriter indexWriter = new IndexWriter(dir, writerConfig);
 		indexWriter.deleteDocuments(query);
+		indexWriter.commit();
 		indexWriter.close();
+		
+		initSearcher();
 	}
 	
 	public boolean isDataSetIndexed(String dataSetName) throws CorruptIndexException, IOException{

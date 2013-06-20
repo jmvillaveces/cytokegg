@@ -113,11 +113,9 @@ public class DataSetFileIndexingTask extends AbstractTask{
 		    IndexWriter indexWriter = new IndexWriter(FSDirectory.open(new File(PluginProperties.getInstance().getIndexPath())), config);
 			indexWriter.addDocument(dataSet);
 			indexWriter.commit();
-					
-			if(indexWriter != null){
-				indexWriter.close(true);
-	    	}
+			indexWriter.close();
 	
+			Repository.getInstance().initSearcher();
 			logger.info(PluginProperties.getInstance().getPluginName() + " mapped "+ mapped + " genes out of "+rows);
 			UIManager.getInstance().update();
 			

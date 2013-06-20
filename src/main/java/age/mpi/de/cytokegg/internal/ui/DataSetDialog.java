@@ -55,12 +55,6 @@ public class DataSetDialog extends JDialog implements Updatable{
 			}
 		});
 		
-		try {
-			initList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		JButton addNet = new JButton("Import from Network", IconLoader.getInstance().getDatabaseAddIcon());
 		addNet.addActionListener(new ActionListener(){
 			@Override
@@ -91,10 +85,9 @@ public class DataSetDialog extends JDialog implements Updatable{
 					@Override
 					public void run(TaskMonitor arg0) throws Exception {
 						Item it = (Item) dSetList.getSelectedValue();
-						
 						if(!it.equals(null)){
 							Repository.getInstance().deleteDataset(it.getId());
-							initList();
+							update();
 						}	
 					}
 					
@@ -137,6 +130,12 @@ public class DataSetDialog extends JDialog implements Updatable{
 		panel.add(bottom, BorderLayout.SOUTH);
 		
 		setContentPane(panel);
+		
+		try {
+			initList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void initList() throws CorruptIndexException, ParseException, IOException{
@@ -151,6 +150,7 @@ public class DataSetDialog extends JDialog implements Updatable{
 			
 			DefaultListModel model = new DefaultListModel();
 			for(int i=0; i<dataSets.length; i++){
+				System.out.println("from repos ->"+dataSets[i]);
 				model.addElement(dataSets[i]);
 			}
 			dSetList.setModel(model);
@@ -160,8 +160,9 @@ public class DataSetDialog extends JDialog implements Updatable{
 	@Override
 	public void update() throws Exception {
 		initList();
-		dSetList.repaint();
-		dSetList.updateUI();
+		this.repaint();
+		//dSetList.repaint();
+		//dSetList.updateUI();
 	}
 
 }

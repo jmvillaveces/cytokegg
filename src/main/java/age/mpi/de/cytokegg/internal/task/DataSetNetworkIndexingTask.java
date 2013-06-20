@@ -108,8 +108,10 @@ public class DataSetNetworkIndexingTask implements Task{
 			IndexWriterConfig config = new IndexWriterConfig(lVersion, new StandardAnalyzer(lVersion));
 			IndexWriter indexWriter = new IndexWriter(FSDirectory.open(new File(PluginProperties.getInstance().getIndexPath())), config);
 			indexWriter.addDocument(dataSet);
+			indexWriter.commit();
 			indexWriter.close();
 			
+			Repository.getInstance().initSearcher();
 			logger.info(PluginProperties.getInstance().getPluginName() + " mapped "+ mapped + " genes out of "+nodes.size());
 			UIManager.getInstance().update();
 		}catch(Exception e){

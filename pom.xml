@@ -2,15 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<properties>
-		<bundle.symbolicName>age.mpi.de.CytoKegg3</bundle.symbolicName>
+		<bundle.symbolicName>age.mpi.de.CytoKegg</bundle.symbolicName>
 		<bundle.namespace>age.mpi.de.cytokegg</bundle.namespace>
+		<bundle.name>CytoKegg</bundle.name>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>age.mpi.de</groupId>
 	<artifactId>CytoKegg3</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>${bundle.symbolicName} [${bundle.namespace}]</name>
+	<version>0.0.2</version>
+	<name>${bundle.name}</name>
 	<packaging>bundle</packaging>
 
 	<build>
