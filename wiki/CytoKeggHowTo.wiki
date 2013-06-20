@@ -7,11 +7,11 @@ CytoKegg Relies on an Index in order to store pathway data as well as expression
 
 Organisms indexed by default:
 
-* Homo sapiens (human)
-* Mus musculus (mouse)
-* Rattus norvegicus (rat)
-* Danio rerio (zebrafish)
-* Drosophila melanogaster (fruit fly)
+  * Homo sapiens (human)
+  * Mus musculus (mouse)
+  * Rattus norvegicus (rat)
+  * Danio rerio (zebrafish)
+  * Drosophila melanogaster (fruit fly)
 
 In order to access the index, go to Apps > CytoKegg > Repository. Once there, it is possible to rebuild the index and add another organism.
 
