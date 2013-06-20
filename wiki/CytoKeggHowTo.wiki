@@ -26,5 +26,7 @@ A dataset canbe imported from a file or a network.
 === Import Dataset From File ===
 To import a dataset from a file, go to Apps > CytoKegg > Find Pathways By Gene(s). Then click the *Import from File* button, select the file and then click *next*.
 
-The file must be a ta separated file where the gene ids are in the first column and the expression values in the remaining ones. A example can be found [https://code.google.com/p/cytokegg/source/browse/trunk/sample%20files/sampledata here] 
+The file must be a ta separated file where the gene ids are in the first column and the expression values in the remaining ones. A example can be found [https://code.google.com/p/cytokegg/source/browse/trunk/sample%20files/sampledata here].
+
 === Import Dataset From Network ===
+To import a dataset from an open network, go to Apps > CytoKegg > Find Pathways By Gene(s). Then click the *Import from Network* button. Once there, select the attribute that holds the gene name and optionally select those attributes that hold expression values. After that click next and select the pathway.
