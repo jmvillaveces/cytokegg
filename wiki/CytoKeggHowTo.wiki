@@ -1,0 +1,23 @@
+#Getting started with CytoKegg
+
+= Getting started with CytoKegg =
+
+== The Index ==
+CytoKegg Relies on an Index in order to store pathway data as well as expression datasets. The Index is created when the application is used for the first time when six model organisms will be indexed by default, however more can be indexed later on.
+
+Organisms indexed by default:
+
+* Homo sapiens (human)
+* Mus musculus (mouse)
+* Rattus norvegicus (rat)
+* Danio rerio (zebrafish)
+* Drosophila melanogaster (fruit fly)
+
+=== List of model organisms ===
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
