@@ -51,7 +51,6 @@ import org.cytoscape.work.TaskIterator;
 import age.mpi.de.cytokegg.internal.CKController;
 import age.mpi.de.cytokegg.internal.repository.Repository;
 import age.mpi.de.cytokegg.internal.task.DataSetNetworkIndexingTask;
-import age.mpi.de.cytokegg.internal.util.IconLoader;
 import age.mpi.de.cytokegg.internal.util.Item;
 
 public class GeneNetworkImportDialog extends JDialog implements NetworkAddedListener, NetworkAboutToBeDestroyedListener {

@@ -46,7 +46,6 @@ import age.mpi.de.cytokegg.internal.repository.Repository;
 import age.mpi.de.cytokegg.internal.task.DataSetFileIndexingTask;
 import age.mpi.de.cytokegg.internal.task.ReadFileTask;
 import age.mpi.de.cytokegg.internal.util.IconLoader;
-import age.mpi.de.cytokegg.internal.util.Item;
 import age.mpi.de.cytokegg.internal.util.TextPlainFileFilter;
 
 public class GeneListImportDialog extends JDialog{
