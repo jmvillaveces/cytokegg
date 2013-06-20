@@ -16,4 +16,4 @@ Organisms indexed by default:
 In order to access the index, go to Apps > CytoKegg > Repository. Once there, it is possible to rebuild the index and add another organism.
 
 == Browse Pathways ==
-CytoKegg can import pathways into Cytoscape by going to Apps > CytoKegg > Browse Pathways
+CytoKegg can import pathways into Cytoscape by going to Apps > CytoKegg > Browse Pathways. Once there, select the organism as well as the pathway to visualize, then click the select button. CytoKegg will then import the pathway into Cytoscape.
