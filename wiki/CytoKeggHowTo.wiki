@@ -13,11 +13,7 @@ Organisms indexed by default:
 * Danio rerio (zebrafish)
 * Drosophila melanogaster (fruit fly)
 
-=== List of model organisms ===
+In order to access the index, go to Apps > CytoKegg > Repository. Once there, it is possible to rebuild the index and add another organism.
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+== Browse Pathways ==
+CytoKegg can import pathways into Cytoscape by going to Apps > CytoKegg > Browse Pathways
