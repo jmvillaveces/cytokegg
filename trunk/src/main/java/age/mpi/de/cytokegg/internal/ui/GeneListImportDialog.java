@@ -54,7 +54,6 @@ public class GeneListImportDialog extends JDialog{
 	private JCheckBox titlesCheckBox;
     private JTable table;
     private JButton openButton, nextButton;
-    private Item[] pathways;
     private Vector<Vector> data;
 	protected String dsName;
     
@@ -63,7 +62,7 @@ public class GeneListImportDialog extends JDialog{
     	
     	this.setSize(new Dimension(400, 400));
     	
-    	data = new Vector(0);
+    	
     	
     	JPanel panel = new JPanel(new BorderLayout());
     	panel.setBorder(new TitledBorder("File import"));
