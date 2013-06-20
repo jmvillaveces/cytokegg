@@ -26,7 +26,6 @@ import org.cytoscape.work.TaskMonitor;
 import age.mpi.de.cytokegg.internal.CKController;
 import age.mpi.de.cytokegg.internal.model.DataSet;
 import age.mpi.de.cytokegg.internal.repository.Repository;
-import age.mpi.de.cytokegg.internal.ui.PathwaySelectionDialog;
 import age.mpi.de.cytokegg.internal.ui.UIManager;
 import age.mpi.de.cytokegg.internal.util.PathwayItem;
 

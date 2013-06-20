@@ -1,7 +1,5 @@
 package age.mpi.de.cytokegg.internal.ui;
 
-import java.awt.Dimension;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
