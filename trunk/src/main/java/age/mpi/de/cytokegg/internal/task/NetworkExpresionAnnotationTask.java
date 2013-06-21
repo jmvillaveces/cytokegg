@@ -46,21 +46,17 @@ public class NetworkExpresionAnnotationTask extends AbstractTask{
 		nodeTable.createColumn("hasExpression", Boolean.class, false);
 		
 		String[] genes = dataSet.getGenes();
-		int count =0;
 		Iterator<CyRow> i = nodeTable.getMatchingRows("KEGG.entry", "gene").iterator();
 		while(i.hasNext()){
 			CyRow row = i.next();
 			String[] names = row.get("KEGG.name", String.class).split(" ");
 			String gene = getGeneInDataSet(names, genes);
 			if(!gene.equals("")){
-				row.set("expression", Arrays.asList(dataSet.getExpression(gene)));
+				Double[] expression = dataSet.getExpression(gene);
+				row.set("expression", Arrays.asList(expression));
 				row.set("hasExpression", true);
-				count ++;
-				
-				System.out.println(gene +" is in dataset");
 			}
 		}
-		System.out.println(count);
 		
 		i = nodeTable.getMatchingRows("KEGG.entry", "ortholog").iterator();
 		while(i.hasNext()){
