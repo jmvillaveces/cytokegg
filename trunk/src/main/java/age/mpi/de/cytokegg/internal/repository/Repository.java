@@ -247,18 +247,6 @@ public class Repository {
 	
 	public boolean isGeneInPathway(String path, String gene) throws CorruptIndexException, IOException, ParseException{
 		String queryStr = "+"+RepositoryFields.GENE.getTag()+":"+gene.replace(":", "\\:")+" +"+RepositoryFields.ID.getTag()+":"+path.replace(":", "\\:");
-		//+gene:hsa:4357 +id:path:hsa04612
-		
-		//Query query0 = new QueryParser(lVersion, RepositoryFields.ID.getTag(), new StandardAnalyzer(lVersion)).parse(path.replace(":", "\\:"));
-		//Query query1 = new QueryParser(lVersion, RepositoryFields.GENE.getTag(), new StandardAnalyzer(lVersion)).parse(gene.replace(":", "\\:"));
-		
-		/*Query query1 = new TermQuery(new Term(RepositoryFields.GENE.getTag(), gene.replace(":", "\\:")));
-		
-		BooleanQuery booleanQuery = new BooleanQuery();
-		booleanQuery.add(query0, BooleanClause.Occur.MUST);
-		booleanQuery.add(query1, BooleanClause.Occur.MUST);
-		
-		System.out.println(booleanQuery);*/
 		
 		Query query = new QueryParser(lVersion, RepositoryFields.GENE.getTag(), new StandardAnalyzer(lVersion)).parse(queryStr);
 		IndexSearcherWrapper wrapper = search(query);
@@ -268,14 +256,6 @@ public class Repository {
 		return false;
 	}
 	
-	/*public Item[] mapIds(String[] ids) throws CorruptIndexException, IOException{
-		
-		Item[] items = new Item[ids.length];
-		for(int i=0; i< ids.length; i++){
-			items[i] = new Item(ids[i], getKeggId(ids[i]));
-		}
-		return items;
-	}*/
 	
 	public String getKeggId(String altId) throws CorruptIndexException, IOException, ParseException{
 		Query query = new QueryParser(lVersion, RepositoryFields.ALT_ID.getTag(), new StandardAnalyzer(lVersion)).parse(altId);
