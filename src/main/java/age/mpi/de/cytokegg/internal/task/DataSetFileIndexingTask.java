@@ -86,7 +86,7 @@ public class DataSetFileIndexingTask extends AbstractTask{
 								
 						double expression = Double.parseDouble(model.getValueAt(i, j).toString());
 						dataSet.add(new DoubleField(RepositoryFields.EXPRESSION.getTag(), expression, Field.Store.YES));
-							
+						
 						if(!flag){
 							min = expression;
 							max = expression;
@@ -115,6 +115,7 @@ public class DataSetFileIndexingTask extends AbstractTask{
 			indexWriter.commit();
 			indexWriter.close();
 	
+			
 			Repository.getInstance().initSearcher();
 			logger.info(PluginProperties.getInstance().getPluginName() + " mapped "+ mapped + " genes out of "+rows);
 			UIManager.getInstance().update();

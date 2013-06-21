@@ -1,6 +1,8 @@
 package age.mpi.de.cytokegg.internal.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.lucene.document.Document;
@@ -26,15 +28,15 @@ public class DataSet {
 		
 		genes = doc.getValues(RepositoryFields.GENE.getTag());
 		String[] expression = doc.getValues(RepositoryFields.EXPRESSION.getTag());
-	
+		
+		Iterator<String> it = Arrays.asList(expression).iterator();
 		for(String gene : genes){
 			Double[] expArr = new Double[conditions.length];
-			for(int i=0; i<expArr.length; i++){
-				expArr[i] = Double.parseDouble(expression[i]);
+			for(int i = 0; i<expArr.length; i++){
+				expArr[i] = Double.parseDouble(it.next());
 			}
 			genesExpMap.put(gene, expArr);
 		}
-		
 	}
 	
 	public String[] getGenes(){
@@ -71,5 +73,23 @@ public class DataSet {
 	
 	public Double[] getExpression(String gene){
 		return genesExpMap.get(gene);
+	}
+	
+	public String toString(){
+		String dataset = "ID \t";
+		for(String condition : conditions){
+			dataset += condition +"\t"; 
+		}
+		dataset += "\n";
+		
+		for(String key : genesExpMap.keySet()){
+			dataset += key +"\t";
+			Double[] exp = genesExpMap.get(key);
+			for(double e : exp)
+				dataset += e+"\t";
+			dataset += "\n";
+		}
+		
+		return dataset;
 	}
 }
