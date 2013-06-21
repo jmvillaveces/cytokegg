@@ -306,19 +306,18 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
     		if(condition == 0){
     			netView.getNodeView(node).clearValueLock(BasicVisualLexicon.NODE_FILL_COLOR);
     		}else{
-    			condition --;
-    			Double exValue = row.getList("expression", Double.class).get(condition);
+    			Double exValue = row.getList("expression", Double.class).get(condition - 1);
     			
-	    		if(exValue>max){
-	    			netView.getNodeView(node).setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.RED);
-	    		}else if(exValue<min){
-	    			netView.getNodeView(node).setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.BLUE);
-	    		}else{
-	    			netView.getNodeView(node).setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, Color.GREEN);
+    			Color color = Color.GREEN;
+	    		if(exValue > max){
+	    			color = Color.RED;
+	    		}else if(exValue < min){
+	    			color = Color.BLUE;
 	    		}
+	    		netView.getNodeView(node).setLockedValue(BasicVisualLexicon.NODE_FILL_COLOR, color);
     		}
-    		netView.updateView();
     	}
+    	netView.updateView();
 	}
 	
 	@Override

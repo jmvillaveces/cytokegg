@@ -3,6 +3,7 @@ package age.mpi.de.cytokegg.internal.task;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.CyTable;
@@ -45,15 +46,41 @@ public class NetworkExpresionAnnotationTask extends AbstractTask{
 		nodeTable.createColumn("hasExpression", Boolean.class, false);
 		
 		String[] genes = dataSet.getGenes();
-		for(String gene : genes){
-			Collection<CyRow> matchingRows = nodeTable.getMatchingRows("KEGG.name", gene);
-			Iterator<CyRow> i = matchingRows.iterator();
-			while(i.hasNext()){
-				CyRow row = i.next();
+		int count =0;
+		Iterator<CyRow> i = nodeTable.getMatchingRows("KEGG.entry", "gene").iterator();
+		while(i.hasNext()){
+			CyRow row = i.next();
+			String[] names = row.get("KEGG.name", String.class).split(" ");
+			String gene = getGeneInDataSet(names, genes);
+			if(!gene.equals("")){
+				row.set("expression", Arrays.asList(dataSet.getExpression(gene)));
+				row.set("hasExpression", true);
+				count ++;
+				
+				System.out.println(gene +" is in dataset");
+			}
+		}
+		System.out.println(count);
+		
+		i = nodeTable.getMatchingRows("KEGG.entry", "ortholog").iterator();
+		while(i.hasNext()){
+			CyRow row = i.next();
+			String[] names = row.get("KEGG.name", String.class).split(" ");
+			String gene = getGeneInDataSet(names, genes);
+			if(!gene.equals("")){
 				row.set("expression", Arrays.asList(dataSet.getExpression(gene)));
 				row.set("hasExpression", true);
 			}
 		}
 	}
-
+	
+	public String getGeneInDataSet(String[] geneNames, String[] dataSetGenes){
+		for(int i=0; i<dataSetGenes.length; i++){
+			for(int j=0; j<geneNames.length; j++){
+				if(dataSetGenes[i].equalsIgnoreCase(geneNames[j]))
+					return dataSetGenes[i];
+			}
+		}
+		return "";
+	}
 }
