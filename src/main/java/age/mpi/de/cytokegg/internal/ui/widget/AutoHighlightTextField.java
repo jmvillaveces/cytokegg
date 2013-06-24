@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2011-2012 José María Villaveces Max Plank institute for biology
- * of ageing (MPI-age)
+ * Copyright (C) 2011-2012 José María Villaveces Max Planck institute for
+ * biology of ageing (MPI-age)
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
