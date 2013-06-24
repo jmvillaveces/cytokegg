@@ -33,6 +33,9 @@ public class IconLoader {
 	private ImageIcon PLAY_IMG;
 	private ImageIcon STOP_IMG;
 	private ImageIcon TIME_IMG;
+	private ImageIcon CYTOKEGG_IMG;
+	private ImageIcon CYTOKEGG_NO_EXP_IMG;
+	private ImageIcon REPOSITORY;
 
 	/**
 	 * Constructor, private because of singleton
@@ -112,6 +115,24 @@ public class IconLoader {
 		if(TIME_IMG == null)
 			TIME_IMG = new ImageIcon(getClass().getResource("/icons/time.png"));
 		return TIME_IMG;
+	}
+	
+	public ImageIcon getCytoKeggIcon(){
+		if(CYTOKEGG_IMG == null)
+			CYTOKEGG_IMG = new ImageIcon(getClass().getResource("/icons/cytokeggicon_exp.png"));
+		return CYTOKEGG_IMG;
+	}
+	
+	public ImageIcon getCytoKeggNoExpIcon(){
+		if(CYTOKEGG_NO_EXP_IMG == null)
+			CYTOKEGG_NO_EXP_IMG = new ImageIcon(getClass().getResource("/icons/cytokeggicon.png"));
+		return CYTOKEGG_NO_EXP_IMG;
+	}
+	
+	public ImageIcon getRepositoryIcon(){
+		if(REPOSITORY == null)
+			REPOSITORY = new ImageIcon(getClass().getResource("/icons/repository.png"));
+		return REPOSITORY;
 	}
 	
 }
