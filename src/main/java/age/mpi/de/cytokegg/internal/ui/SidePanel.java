@@ -3,6 +3,7 @@ package age.mpi.de.cytokegg.internal.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -62,6 +63,45 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 	public SidePanel(){
 
 		setLayout(new VerticalLayout());
+		
+		JButton browseButt = new SimpleButton("Browse Pathways",IconLoader.getInstance().getCytoKeggNoExpIcon());
+		browseButt.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				UIManager.getInstance().browse();
+			}
+			
+		});
+		
+		JButton findButt = new SimpleButton("Find Pathways by Gene(s)", IconLoader.getInstance().getCytoKeggIcon());
+		findButt.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				UIManager.getInstance().find();
+			}
+			
+		});
+		
+		JButton repositoryButt = new SimpleButton("Repository", IconLoader.getInstance().getRepositoryIcon());
+		repositoryButt.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				UIManager.getInstance().repository();
+			}
+			
+		});
+		
+		JPanel buttsPanel = new JPanel();
+		buttsPanel.setLayout(new GridLayout(3,1));
+		buttsPanel.setBorder(new TitledBorder("Options"));
+		buttsPanel.add(browseButt);
+		buttsPanel.add(findButt);
+		buttsPanel.add(repositoryButt);
+		
+		add(buttsPanel);
 		
 		Set<CyNetwork> nets = CKController.getInstance().getNetMgr().getNetworkSet();
 		Item[] items = new Item[nets.size()+1];
