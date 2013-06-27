@@ -20,6 +20,7 @@ package age.mpi.de.cytokegg.internal.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -37,6 +39,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -56,9 +59,11 @@ import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.work.TaskIterator;
 import org.jdesktop.swingx.VerticalLayout;
 
 import age.mpi.de.cytokegg.internal.CKController;
+import age.mpi.de.cytokegg.internal.task.SelectionTask;
 import age.mpi.de.cytokegg.internal.ui.widget.RangeSlider;
 import age.mpi.de.cytokegg.internal.util.IconLoader;
 import age.mpi.de.cytokegg.internal.util.Item;
@@ -173,6 +178,60 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		add(GEAExpression);
 		
 		initConditionsPanel();
+		
+		//SelectionPanel
+		JRadioButton none = new JRadioButton("None");
+		none.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Item pathway = (Item) pBox.getSelectedItem();
+				SelectionTask task = new SelectionTask(Long.parseLong(pathway.getId()), "none");
+				CKController.getInstance().getDialogTaskManager().execute(new TaskIterator(task));
+			}
+			
+		});
+		
+        JRadioButton kineaseButton = new JRadioButton("Kineases");
+        kineaseButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Item pathway = (Item) pBox.getSelectedItem();
+				SelectionTask task = new SelectionTask(Long.parseLong(pathway.getId()), "phosphorylation");
+				CKController.getInstance().getDialogTaskManager().execute(new TaskIterator(task));
+			}
+			
+		});
+        
+        JRadioButton phosphataseButton = new JRadioButton("Phosphatases");
+        phosphataseButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Item pathway = (Item) pBox.getSelectedItem();
+				SelectionTask task = new SelectionTask(Long.parseLong(pathway.getId()), "dephosphorylation");
+				CKController.getInstance().getDialogTaskManager().execute(new TaskIterator(task));
+			}
+			
+		});
+        
+        //Group the radio buttons.
+        ButtonGroup group = new ButtonGroup();
+        group.add(none);
+        group.add(kineaseButton);
+        group.add(phosphataseButton);
+        
+		JPanel selectionPanel = new JPanel();
+		selectionPanel.setLayout(new GridLayout(3,0));
+		selectionPanel.setBorder(new TitledBorder("Highlight"));
+		selectionPanel.add(none);
+		selectionPanel.add(kineaseButton);
+		selectionPanel.add(phosphataseButton);
+		
+		none.setSelected(true);
+		add(selectionPanel);
+		
 	}
 	
 	private void initConditionsPanel() {
@@ -307,7 +366,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 			
 			String[] names = row.get("KEGG.name", String.class).split(" ");
 			
-			if(!gen.contains(names[0]))
+			if(names.length>0 && !gen.contains(names[0]))
 				gen.add(names[0]);
 		}
 		
