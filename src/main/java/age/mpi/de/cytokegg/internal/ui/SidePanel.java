@@ -73,12 +73,12 @@ import age.mpi.de.cytokegg.internal.util.PluginProperties;
 public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAddedListener, NetworkAboutToBeDestroyedListener {
 
 	private JComboBox pBox, gBox, cBox;
-	private JPanel GEAExpression, conditionsPanel;
 	private String defValue = "-Select a condition-";
 	private RangeSlider slider;
 	private JLabel minLabel, maxLabel;
 	private JTextField timeField;
-	private JButton setButton, playButton, stopButton;
+	private JButton setButton, playButton, stopButton, butt;
+	private JRadioButton phosphataseButton, kineaseButton, none;
 	private PlayThread thread = null;
 	private boolean playRunning = false;
 	
@@ -141,12 +141,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		pBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(cBox.getSelectedIndex() != 0){
-					pathwayChange();
-				}else{
-					((DefaultComboBoxModel) gBox.getModel()).removeAllElements();
-					((DefaultComboBoxModel) cBox.getModel()).removeAllElements();
-				}
+				pathwayChange();
 			}
 		});
 		
@@ -159,7 +154,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		//GEA Panel
 		gBox = new JComboBox();
 		
-		JButton butt = new JButton("find",IconLoader.getInstance().getMagnifierIcon());
+		butt = new JButton("find",IconLoader.getInstance().getMagnifierIcon());
 		butt.addActionListener(new ActionListener(){
 
 			@Override
@@ -168,7 +163,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 			}
 		});
 		
-		GEAExpression = new JPanel();
+		JPanel GEAExpression = new JPanel();
 		GEAExpression.setBorder(new TitledBorder("Expression Profile"));
 		
 		GEAExpression.add(gBox);
@@ -180,7 +175,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		initConditionsPanel();
 		
 		//SelectionPanel
-		JRadioButton none = new JRadioButton("None");
+		none = new JRadioButton("None");
 		none.addActionListener(new ActionListener(){
 
 			@Override
@@ -192,7 +187,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 			
 		});
 		
-        JRadioButton kineaseButton = new JRadioButton("Kineases");
+        kineaseButton = new JRadioButton("Kineases");
         kineaseButton.addActionListener(new ActionListener(){
 
 			@Override
@@ -204,7 +199,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 			
 		});
         
-        JRadioButton phosphataseButton = new JRadioButton("Phosphatases");
+        phosphataseButton = new JRadioButton("Phosphatases");
         phosphataseButton.addActionListener(new ActionListener(){
 
 			@Override
@@ -232,11 +227,10 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 		none.setSelected(true);
 		add(selectionPanel);
 		
+		pathwayChange();
 	}
 	
 	private void initConditionsPanel() {
-		
-		conditionsPanel = new JPanel();
 
 		//Range Panel
 		{	
@@ -340,66 +334,125 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 	
 	private void pathwayChange(){
 		Item selected = (Item) pBox.getSelectedItem();
-		CyNetwork pathwayNet = CKController.getInstance().getNetMgr().getNetwork(Long.parseLong(selected.getId()));
-		CyRootNetwork rootNet = ((CySubNetwork) pathwayNet).getRootNetwork();
 		
-		CyTable nodeTable = rootNet.getDefaultNodeTable();
-		
-		Collection<CyRow> genes = nodeTable.getMatchingRows("KEGG.entry", "gene");
-		Collection<CyRow> orthologs = nodeTable.getMatchingRows("KEGG.entry", "ortholog");
-		
-		List<String> gen = new ArrayList<String>();
-		
-		Iterator<CyRow> i = genes.iterator();
-		while(i.hasNext()){
-			CyRow row = i.next();
+		if(selected.getDescription().equals("-Select a Network-")){
 			
-			String[] names = row.get("KEGG.name", String.class).split(" ");
+			((DefaultComboBoxModel) gBox.getModel()).removeAllElements();
+			((DefaultComboBoxModel) cBox.getModel()).removeAllElements();
 			
-			if(!gen.contains(names[0]))
-				gen.add(names[0]);
+			//Expression
+			gBox.setEnabled(false);
+			butt.setEnabled(false);
+			
+			//Condition
+			cBox.setEnabled(false);
+			playButton.setEnabled(false);
+			slider.setEnabled(false);
+			timeField.setEnabled(false);
+			setButton.setEnabled(false);
+			
+			//Highlight
+			//none.setSelected(true);
+			phosphataseButton.setEnabled(false);
+			kineaseButton.setEnabled(false);
+			none.setEnabled(false);
+			
+		}else{
+			CyNetwork pathwayNet = CKController.getInstance().getNetMgr().getNetwork(Long.parseLong(selected.getId()));
+			CyRootNetwork rootNet = ((CySubNetwork) pathwayNet).getRootNetwork();
+			
+			CyTable nodeTable = rootNet.getDefaultNodeTable();
+			
+			Collection<CyRow> genes = nodeTable.getMatchingRows("KEGG.entry", "gene");
+			Collection<CyRow> orthologs = nodeTable.getMatchingRows("KEGG.entry", "ortholog");
+			
+			List<String> gen = new ArrayList<String>();
+			
+			Iterator<CyRow> i = genes.iterator();
+			while(i.hasNext()){
+				CyRow row = i.next();
+				
+				String[] names = row.get("KEGG.name", String.class).split(" ");
+				
+				if(!gen.contains(names[0]))
+					gen.add(names[0]);
+			}
+			
+			i = orthologs.iterator();
+			while(i.hasNext()){
+				CyRow row = i.next();
+				
+				String[] names = row.get("KEGG.name", String.class).split(" ");
+				
+				if(names.length>0 && !gen.contains(names[0]))
+					gen.add(names[0]);
+			}
+			
+			if(gen.size() == 0){
+				//Expression
+				gBox.setEnabled(false);
+				butt.setEnabled(false);
+			}else{
+				//Expression
+				gBox.setEnabled(true);
+				butt.setEnabled(true);
+			}
+			
+			String[] genArr = gen.toArray(new String[0]);
+			Arrays.sort(genArr);
+			
+			ComboBoxModel gBoxModel = new DefaultComboBoxModel(genArr);
+			gBox.setModel(gBoxModel);
+			
+			CyTable netTable = rootNet.getDefaultNetworkTable();
+			CyRow netRow = netTable.getRow(rootNet.getSUID());
+			
+			List<String> conditions = netRow.getList("conditions", String.class);
+			//conditions.add(0, defValue);
+			
+			if(conditions == null || conditions.size()==0){
+				cBox.setEnabled(false);
+				playButton.setEnabled(false);
+				slider.setEnabled(false);
+				timeField.setEnabled(false);
+				setButton.setEnabled(false);
+			}else{
+				cBox.setEnabled(true);
+				playButton.setEnabled(true);
+				slider.setEnabled(true);
+				timeField.setEnabled(true);
+				setButton.setEnabled(true);
+			}
+			
+			List<String> nConditions = new ArrayList<String>();
+			if(conditions != null)
+				nConditions.addAll(conditions);
+			
+			nConditions.add(0, defValue);
+			
+			DefaultComboBoxModel cBoxModel = new DefaultComboBoxModel(nConditions.toArray(new String[0]));
+			cBox.setModel(cBoxModel);
+			
+			if(netRow.get("min", Double.class) != null && netRow.get("max", Double.class) != null){
+				//RangerSlider
+				double min = netRow.get("min", Double.class)*10;
+				double max = netRow.get("max", Double.class)*10;
+				
+				slider.setMinimum((int) min);
+		        slider.setMaximum((int) max);
+		        
+		        double value = (max+min)/2;
+		        slider.setValue((int) value);
+		        slider.setUpperValue((int) value);
+		        
+			}
+			
+	        //Highlight
+	        phosphataseButton.setEnabled(true);
+			kineaseButton.setEnabled(true);
+			none.setEnabled(true);
+			none.setSelected(true);
 		}
-		
-		i = orthologs.iterator();
-		while(i.hasNext()){
-			CyRow row = i.next();
-			
-			String[] names = row.get("KEGG.name", String.class).split(" ");
-			
-			if(names.length>0 && !gen.contains(names[0]))
-				gen.add(names[0]);
-		}
-		
-		String[] genArr = gen.toArray(new String[0]);
-		Arrays.sort(genArr);
-		
-		ComboBoxModel gBoxModel = new DefaultComboBoxModel(genArr);
-		gBox.setModel(gBoxModel);
-		
-		CyTable netTable = rootNet.getDefaultNetworkTable();
-		CyRow netRow = netTable.getRow(rootNet.getSUID());
-		
-		List<String> conditions = netRow.getList("conditions", String.class);
-		//conditions.add(0, defValue);
-		
-		List<String> nConditions = new ArrayList<String>();
-		nConditions.addAll(conditions);
-		nConditions.add(0, defValue);
-		
-		DefaultComboBoxModel cBoxModel = new DefaultComboBoxModel(nConditions.toArray(new String[0]));
-		cBox.setModel(cBoxModel);
-		
-		//RangerSlider
-		double min = netRow.get("min", Double.class)*10;
-		double max = netRow.get("max", Double.class)*10;
-		
-		slider.setMinimum((int) min);
-        slider.setMaximum((int) max);
-        
-        double value = (max+min)/2;
-        slider.setValue((int) value);
-        slider.setUpperValue((int) value);
-		
 	}
 	
 	private void setCondition(Item pathway, int condition){
