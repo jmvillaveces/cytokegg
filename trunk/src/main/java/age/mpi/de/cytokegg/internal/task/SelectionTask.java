@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
-import org.cytoscape.model.CyNode;
 import org.cytoscape.model.CyRow;
 import org.cytoscape.model.subnetwork.CyRootNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;
