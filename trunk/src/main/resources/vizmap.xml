@@ -21,9 +21,14 @@
                 <discreteMapping attributeType="string" attributeName="KEGG.entry">
                     <discreteMappingEntry value="200" attributeValue="compound"/>
                     <discreteMappingEntry value="90" attributeValue="map"/>
+                    <discreteMappingEntry value="0" attributeValue="hiddengene"/>
                 </discreteMapping>
             </visualProperty>
-            <visualProperty name="NODE_LABEL_TRANSPARENCY" default="255"/>
+            <visualProperty name="NODE_LABEL_TRANSPARENCY" default="255">
+            	<discreteMapping attributeType="string" attributeName="KEGG.entry">
+                    <discreteMappingEntry value="0" attributeValue="hiddengene"/>
+                </discreteMapping>
+            </visualProperty>
             <visualProperty name="NODE_NESTED_NETWORK_IMAGE_VISIBLE" default="false"/>
             <visualProperty name="NODE_CUSTOMGRAPHICS_6" default="org.cytoscape.ding.customgraphics.NullCustomGraphics,0,[ Remove Graphics ],"/>
             <visualProperty name="NODE_CUSTOMGRAPHICS_POSITION_4" default="C,C,c,0.00,0.00"/>

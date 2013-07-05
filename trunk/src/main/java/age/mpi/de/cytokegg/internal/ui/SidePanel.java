@@ -352,7 +352,7 @@ public class SidePanel extends JPanel implements CytoPanelComponent, NetworkAdde
 			setButton.setEnabled(false);
 			
 			//Highlight
-			//none.setSelected(true);
+			none.setSelected(true);
 			phosphataseButton.setEnabled(false);
 			kineaseButton.setEnabled(false);
 			none.setEnabled(false);
