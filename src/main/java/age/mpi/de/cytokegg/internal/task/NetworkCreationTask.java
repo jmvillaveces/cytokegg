@@ -232,6 +232,68 @@ public class NetworkCreationTask extends AbstractTask{
 	}
 	
 	private CyNode mapEntry(Entry entry, CyNetwork network){
+		CyNode node = createNode(entry, network);
+		
+		for (Graphics grap : entry.getGraphics()) {
+			if (grap != null) {
+				
+				if(grap.getName() != null){
+					String[] labels = grap.getName().split(", ");
+					nodeTable.getRow(node.getSUID()).set(KEGG_LABEL, labels[0]);
+					nodeTable.getRow(node.getSUID()).set(KEGG_LABEL_LIST, Arrays.asList(labels));
+					network.getDefaultNodeTable().getRow(node.getSUID()).set("name", labels[0]);
+				}
+				
+				//If not a line
+				if(!grap.getType().equals("line")){
+					nodeTable.getRow(node.getSUID()).set(KEGG_X, Double.parseDouble(grap.getX()));
+					nodeTable.getRow(node.getSUID()).set(KEGG_Y, Double.parseDouble(grap.getY()));
+					
+					nodeTable.getRow(node.getSUID()).set(KEGG_WIDTH, Double.parseDouble(grap.getWidth()));
+					nodeTable.getRow(node.getSUID()).set(KEGG_HEIGHT, Double.parseDouble(grap.getHeight()));
+				}else{
+					
+					CyNode nodeTwo = createNode(entry, network);
+					
+					if(grap.getName() != null){
+						String[] labels = grap.getName().split(", ");
+						nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_LABEL, labels[0]);
+						nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_LABEL_LIST, Arrays.asList(labels));
+						network.getDefaultNodeTable().getRow(nodeTwo.getSUID()).set("name", labels[0]);
+					}
+					
+					String[] coords = grap.getCoords().split(",");
+					
+					nodeTable.getRow(node.getSUID()).set(KEGG_X, Double.parseDouble(coords[0]));
+					nodeTable.getRow(node.getSUID()).set(KEGG_Y, Double.parseDouble(coords[1]));
+					
+					nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_X, Double.parseDouble(coords[2]));
+					nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_Y, Double.parseDouble(coords[3]));
+					
+					
+					//Resize node size to one
+					nodeTable.getRow(node.getSUID()).set(KEGG_WIDTH, Double.parseDouble("1"));
+					nodeTable.getRow(node.getSUID()).set(KEGG_HEIGHT, Double.parseDouble("1"));
+					
+					nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_WIDTH, Double.parseDouble("1"));
+					nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_HEIGHT, Double.parseDouble("1"));
+					
+					//KEGG.entry
+					nodeTable.getRow(node.getSUID()).set(KEGG_ENTRY, "hiddengene");
+					nodeTable.getRow(nodeTwo.getSUID()).set(KEGG_ENTRY, "hiddengene");
+					
+					//create edge between invisible nodes
+					network.addEdge(node, nodeTwo, false);
+				}
+				
+			}
+		}
+		
+		return node;
+	}
+	
+	private CyNode createNode(Entry entry, CyNetwork network){
+		
 		CyNode node = network.addNode();
 		
 		nodeTable.getRow(node.getSUID()).set(KEGG_ID, Integer.parseInt(entry.getId()));
@@ -251,24 +313,6 @@ public class NetworkCreationTask extends AbstractTask{
 		if (reaction != null) {
 			nodeTable.getRow(node.getSUID()).set(KEGG_REACTION, reaction);
 			nodeTable.getRow(node.getSUID()).set(KEGG_REACTION_LIST, Arrays.asList(reaction.split(" ")));
-		}
-		
-		for (Graphics grap : entry.getGraphics()) {
-			// final Graphics graphics = comp.getGraphics();
-			if (grap != null) {
-				
-				if(grap.getName() != null){
-					String[] labels = grap.getName().split(", ");
-					nodeTable.getRow(node.getSUID()).set(KEGG_LABEL, labels[0]);
-					nodeTable.getRow(node.getSUID()).set(KEGG_LABEL_LIST, Arrays.asList(labels));
-					network.getDefaultNodeTable().getRow(node.getSUID()).set("name", labels[0]);
-				}
-				
-				nodeTable.getRow(node.getSUID()).set(KEGG_WIDTH, Double.parseDouble(grap.getWidth()));
-				nodeTable.getRow(node.getSUID()).set(KEGG_HEIGHT, Double.parseDouble(grap.getHeight()));
-				nodeTable.getRow(node.getSUID()).set(KEGG_X, Double.parseDouble(grap.getX()));
-				nodeTable.getRow(node.getSUID()).set(KEGG_Y, Double.parseDouble(grap.getY()));	
-			}
 		}
 		
 		return node;
