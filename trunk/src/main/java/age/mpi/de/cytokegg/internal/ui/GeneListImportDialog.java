@@ -39,6 +39,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.cytoscape.work.TaskIterator;
 
 import age.mpi.de.cytokegg.internal.CKController;
@@ -132,10 +133,8 @@ public class GeneListImportDialog extends JDialog{
             					return;
             				}
             			}
-            		} catch (CorruptIndexException e) {
+            		} catch (Exception e) {
             			e.printStackTrace();
-            		} catch (IOException e1) {
-            			e1.printStackTrace();
             		}
                 	
                 	DataSetFileIndexingTask task = new DataSetFileIndexingTask(dsName, table.getModel());

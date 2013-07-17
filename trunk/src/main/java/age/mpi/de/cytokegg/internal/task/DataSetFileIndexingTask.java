@@ -88,7 +88,7 @@ public class DataSetFileIndexingTask extends AbstractTask{
     	try {
     		for(int i=0; i<rows; i++){
 	    		String uId = model.getValueAt(i, 0).toString();
-	    		if(uId == null)
+	    		if(uId == null || uId.equals(""))
 					continue;
 	    		
 	    		String keggId = Repository.getInstance().getKeggId(uId);
