@@ -79,7 +79,7 @@ public class DataSetFileIndexingTask extends AbstractTask{
     	
     	Document dataSet = new Document();
     	dataSet.add(new StringField(RepositoryFields.TYPE.getTag(), RepositoryFields.DATASET.getTag(), Field.Store.YES));
-    	dataSet.add(new TextField(RepositoryFields.TITLE.getTag(), dsetName, Field.Store.YES));
+    	dataSet.add(new StringField(RepositoryFields.TITLE.getTag(), dsetName, Field.Store.YES));
     	
     	
     	List<String> conditions = new ArrayList<String>();
@@ -88,7 +88,10 @@ public class DataSetFileIndexingTask extends AbstractTask{
     	try {
     		for(int i=0; i<rows; i++){
 	    		String uId = model.getValueAt(i, 0).toString();
-				String keggId = Repository.getInstance().getKeggId(uId);
+	    		if(uId == null)
+					continue;
+	    		
+	    		String keggId = Repository.getInstance().getKeggId(uId);
 				
 				taskMonitor.setStatusMessage(PluginProperties.getInstance().getPluginName() + " mapped "+ mapped + " genes out of "+rows);
 				
