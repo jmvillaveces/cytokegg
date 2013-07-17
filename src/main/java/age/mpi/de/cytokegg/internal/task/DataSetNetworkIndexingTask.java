@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
@@ -92,15 +93,14 @@ public class DataSetNetworkIndexingTask implements Task{
 				CyRow row = nodeAtt.getRow(nodes.get(i).getSUID());
 				
 				String uId = row.get(idAttr, String.class);
-				if(uId == null){
+				if(uId == null || uId.equals(""))
 					continue;
-				}
 				
 				String keggId = Repository.getInstance().getKeggId(uId);
-				
 				if(!keggId.equals("")){
 					mapped++;
 					
+					dataSet.add(new StringField(RepositoryFields.GENE.getTag(), keggId, Field.Store.YES));
 					for(String condition : conditions){
 						
 						double expression = row.get(condition, Double.class);
@@ -120,6 +120,9 @@ public class DataSetNetworkIndexingTask implements Task{
 					}
 				}
 			}
+			
+			dataSet.add(new DoubleField(RepositoryFields.MIN.getTag(), min, Field.Store.YES));
+		    dataSet.add(new DoubleField(RepositoryFields.MAX.getTag(), max, Field.Store.YES));
 			
 			taskMonitor.setStatusMessage("Indexing dataset conditions");
 			for(String condition : conditions){
