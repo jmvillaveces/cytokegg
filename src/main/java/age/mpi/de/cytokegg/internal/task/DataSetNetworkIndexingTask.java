@@ -79,7 +79,7 @@ public class DataSetNetworkIndexingTask implements Task{
 			
 			Document dataSet = new Document();
 	    	dataSet.add(new StringField(RepositoryFields.TYPE.getTag(), RepositoryFields.DATASET.getTag(), Field.Store.YES));
-	    	dataSet.add(new TextField(RepositoryFields.TITLE.getTag(), dsetName, Field.Store.YES));
+	    	dataSet.add(new StringField(RepositoryFields.TITLE.getTag(), dsetName, Field.Store.YES));
 			
 			List<CyNode> nodes = network.getNodeList();//.getNodeIndicesArray();
 			CyTable nodeAtt = network.getDefaultNodeTable();
@@ -92,6 +92,10 @@ public class DataSetNetworkIndexingTask implements Task{
 				CyRow row = nodeAtt.getRow(nodes.get(i).getSUID());
 				
 				String uId = row.get(idAttr, String.class);
+				if(uId == null){
+					continue;
+				}
+				
 				String keggId = Repository.getInstance().getKeggId(uId);
 				
 				if(!keggId.equals("")){

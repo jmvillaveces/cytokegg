@@ -119,15 +119,15 @@ public class Repository {
 	public boolean isOrganismIndexed(String organismId) throws CorruptIndexException, IOException{
         
 		Query term1 = new TermQuery(new Term(RepositoryFields.TYPE.getTag(), RepositoryFields.ORGANISM.getTag()));
-		Query term2 = new TermQuery(new Term(RepositoryFields.ID.getTag(), organismId));
+		Query term2 = new TermQuery(new Term(RepositoryFields.ORGANISM.getTag(), organismId));
 		
 		BooleanQuery query = new BooleanQuery();
 		query.add(term1, BooleanClause.Occur.MUST);
 		query.add(term2, BooleanClause.Occur.MUST);
 		
-		if(search(query).size() > 0){
+		if(search(query).size() > 0)
         	return true;
-        }
+        
         return false;
 	}
 	
@@ -189,7 +189,7 @@ public class Repository {
         return null;	
 	}
 	
-	public void deleteDataset(String dataSetName) throws CorruptIndexException, IOException{
+	public void deleteDataset(String dataSetName) throws CorruptIndexException, IOException, ParseException{
 		Query term1 = new TermQuery(new Term(RepositoryFields.TYPE.getTag(), RepositoryFields.DATASET.getTag()));
 		Query term2 = new TermQuery(new Term(RepositoryFields.TITLE.getTag(), dataSetName));
 		
@@ -197,6 +197,7 @@ public class Repository {
 		query.add(term1, BooleanClause.Occur.MUST);
 		query.add(term2, BooleanClause.Occur.MUST);
 		
+
 		IndexWriter indexWriter = new IndexWriter(dir, writerConfig);
 		indexWriter.deleteDocuments(query);
 		indexWriter.commit();
@@ -206,17 +207,16 @@ public class Repository {
 	}
 	
 	public boolean isDataSetIndexed(String dataSetName) throws CorruptIndexException, IOException{
-		Query term1 = new TermQuery(new Term(RepositoryFields.TYPE.getTag(), RepositoryFields.DATASET.getTag()));
-		Query term2 = new TermQuery(new Term(RepositoryFields.TITLE.getTag(), dataSetName));
+		Query query = new TermQuery(new Term(RepositoryFields.TYPE.getTag(), RepositoryFields.DATASET.getTag()));
 		
-		BooleanQuery query = new BooleanQuery();
-		query.add(term1, BooleanClause.Occur.MUST);
-		query.add(term2, BooleanClause.Occur.MUST);
-		
-		if(search(query).size() > 0){
-        	return true;
-        }
-        return false;
+		IndexSearcherWrapper search = search(query);
+		for(int i=0; i<search.size(); i++){
+			Document doc = search.get(i);
+			if(doc.get(RepositoryFields.TITLE.getTag()).equalsIgnoreCase(dataSetName)){
+				return true;
+			}
+		}		
+        return false; 
 	}
 	
 	public Item[] getIndexedDataSets() throws ParseException, CorruptIndexException, IOException{
@@ -275,6 +275,10 @@ public class Repository {
 	
 	
 	public String getKeggId(String altId) throws CorruptIndexException, IOException, ParseException{
+		
+		if(altId == null)
+			return "";
+		
 		Query query = new QueryParser(lVersion, RepositoryFields.ALT_ID.getTag(), new StandardAnalyzer(lVersion)).parse(altId);
 		IndexSearcherWrapper wrapper = search(query);
 		
@@ -399,5 +403,9 @@ class IndexSearcherWrapper{
 	
 	public Document get(int index) throws CorruptIndexException, IOException{
 		return searcher.doc(hits.scoreDocs[index].doc);
+	}
+	
+	public int getDocumentNumber(int index){
+		return hits.scoreDocs[index].doc;
 	}
 }

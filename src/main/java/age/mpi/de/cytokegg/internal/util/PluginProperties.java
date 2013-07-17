@@ -46,7 +46,7 @@ public class PluginProperties {
     }
     
     public String getIndexPath(){
-    	return props.getProperty("index");
+    	return System.getProperty("user.home")+props.getProperty("index");
     }
     
     public Item[] getEFactors(){

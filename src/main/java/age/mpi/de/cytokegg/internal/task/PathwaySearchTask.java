@@ -46,7 +46,9 @@ public class PathwaySearchTask implements Task{
 		
 		try {
 			DataSet geneLst = CKController.getInstance().getCurrentDataSet();
-			
+			if(geneLst == null){
+				System.out.println("datset is null");
+			}
 			List<String> genes = new ArrayList<String>(); 
 			for(String uId : geneLst.getGenes()){
 				
