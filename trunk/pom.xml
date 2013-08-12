@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>age.mpi.de</groupId>
 	<artifactId>CytoKegg3</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<name>${bundle.name}</name>
 	<packaging>bundle</packaging>
 
