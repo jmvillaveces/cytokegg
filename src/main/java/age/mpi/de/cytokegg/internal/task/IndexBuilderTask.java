@@ -156,7 +156,7 @@ public class IndexBuilderTask extends AbstractTask{
 		public void run() {
 			try{
 				Map<String, List<String>> genes = mapIds(service.getGenesByPathway(pathway.getId()), organism.getId());
-					
+				
 				//IndexPathway
 				Document path = new Document();
 					

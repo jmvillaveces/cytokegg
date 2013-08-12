@@ -67,14 +67,18 @@ public class KeggService {
 				}
 				
 				
-				if(!Character.isDigit(line.trim().charAt(0))){
+				/*if(!Character.isDigit(line.trim().charAt(0))){
 					analize = false;
-				}
+				}*/
+				
+				if(!line.startsWith(" "))
+					analize = false;
 				
 				if(analize){
 					String[] geneArr = line.substring(0,line.indexOf(";")).replace("GENE", "").trim().split("  ");
 					if(geneArr.length>=2)
 						genes.add(new Item(geneArr[0], geneArr[1]));
+					
 				}
 	        }
 			br.close();
@@ -87,33 +91,31 @@ public class KeggService {
 	}
 	
 	public Map<String, List<String>> mapIds(String[] targets, String[] genes){
-		Map<String,List<String>> mapedGenes = new HashMap<String,List<String>>();
+		Map<String,List<String>> mappedGenes = new HashMap<String,List<String>>();
 		for(String target : targets){
 			Map<String, List<String>> map = mapIds(target, genes);
 			for(String key : map.keySet()){
-				if(mapedGenes.containsKey(key)){
-					List<String> mainLst = mapedGenes.get(key);
+				if(mappedGenes.containsKey(key)){
+					List<String> mainLst = mappedGenes.get(key);
 					List<String> lst = map.get(key);
 					for(String s : lst){
 						if(!mainLst.contains(s))
 							mainLst.add(s);
 					}
     			}else{
-    				mapedGenes.put(key, map.get(key));
+    				mappedGenes.put(key, map.get(key));
     			}
 			}
 		}
-		return mapedGenes;
+		return mappedGenes;
 	}
 	
 	public Map<String, List<String>> mapIds(String target, String[] genes){
 		Map<String,List<String>> mapedGenes = new HashMap<String,List<String>>();
 		
 		String query = "";
-		for(String gene : genes){
+		for(String gene : genes)
 			query += gene + "+";
-		}
-		//query = query.substring(0, query.lastIndexOf("+"));
 		
 		String[] arguments = new String[]{CONV, target};
 		String url = addArguments(baseUrl, arguments) + query;
@@ -228,5 +230,10 @@ public class KeggService {
 	
 	private String addArgument(String url, String argument){
 		return url+argument+"/";
+	}
+	
+	public static void main(String[] args){
+		KeggService.getInstance().getGenesByPathway("cel00010");
+		KeggService.getInstance().getGenesByPathway("hsa04210");
 	}
 }
