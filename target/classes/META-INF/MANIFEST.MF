@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1470821169390
+Build-Jdk: 1.8.0_40
+Built-By: jvillaveces
+Bundle-Activator: de.mpg.biochem.cytokegg.internal.CyActivator
+Bundle-ManifestVersion: 2
+Bundle-Name: cytokegg
+Bundle-SymbolicName: de.mpg.biochem.cytokegg
+Bundle-Version: 0.0.1.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Import-Package: javax.swing,javax.swing.plaf.basic,javax.xml.bind,javax.
+ xml.bind.annotation,javax.xml.bind.annotation.adapters,javax.xml.ws.htt
+ p,org.apache.log4j;version="[1.2,2)",org.cytoscape.application;version=
+ "[3.4,4)",org.cytoscape.application.swing;version="[3.4,4)",org.cytosca
+ pe.model;version="[3.4,4)",org.cytoscape.model.subnetwork;version="[3.4
+ ,4)",org.cytoscape.service.util;version="[3.4,4)",org.cytoscape.task.re
+ ad;version="[3.4,4)",org.cytoscape.view.model;version="[3.4,4)",org.cyt
+ oscape.view.vizmap;version="[3.4,4)",org.cytoscape.work;version="[3.4,4
+ )",org.cytoscape.work.swing;version="[3.4,4)",org.osgi.framework;versio
+ n="[1.5,2)"
+Tool: Bnd-1.50.0
