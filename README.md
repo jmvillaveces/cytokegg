@@ -2,6 +2,9 @@
 
 CytoKegg is a Cytoscape 3.4.0 app designed to import **KEGG pathways** to **Cytoscape**.
 
+## Features
+
+* Search and import KEGG pathways
 
 ## Usage
 
