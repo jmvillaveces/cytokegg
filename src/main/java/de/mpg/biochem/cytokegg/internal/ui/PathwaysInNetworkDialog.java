@@ -45,7 +45,7 @@ public class PathwaysInNetworkDialog extends JDialog implements NetworkAddedList
 	private JComboBox<Item> orgsCB;
 	
 	private List<String> idType;
-	private JComboBox<Item> idTypeCB;
+	private JComboBox<String> idTypeCB;
 	
 	private JComboBox<Item> networkCB;
 	private JComboBox<Item> fieldCB;
@@ -62,6 +62,7 @@ public class PathwaysInNetworkDialog extends JDialog implements NetworkAddedList
 		//Id Types
 		idType = Arrays.asList(new String[]{"genes", "ncbi-proteinid", "ncbi-geneid", "uniprot"});
 		
+		initComponents();
 	}
 	
 	private void initComponents(){
@@ -130,6 +131,25 @@ public class PathwaysInNetworkDialog extends JDialog implements NetworkAddedList
 			}
 		});
 		
+	
+		idTypeCB = new JComboBox(new DefaultComboBoxModel(idType.toArray()));
+		
+		{
+			JPanel aux = new JPanel();
+			aux.add(orgsCB);
+			aux.add(networkCB);
+			aux.add(fieldCB);
+			aux.add(idTypeCB);
+			
+			panel.add(aux, BorderLayout.CENTER);
+		}
+		
+		
+		setContentPane(panel);
+        setModal(true);
+        
+        pack();
+        setVisible(true);
 	}
 	
 	private void updateNetworkCB(){
@@ -137,7 +157,7 @@ public class PathwaysInNetworkDialog extends JDialog implements NetworkAddedList
 		List<Item> netStr = new ArrayList<Item>();
 		
 		for(CyNetwork net : nets ){
-			netStr.add(new Item(net.getSUID() + "", net.NAME));
+			netStr.add(new Item(net.getSUID() + "", net.getDefaultNetworkTable().getTitle()));
 		}
 		
 		networkCB.setModel( new DefaultComboBoxModel(netStr.toArray()));
