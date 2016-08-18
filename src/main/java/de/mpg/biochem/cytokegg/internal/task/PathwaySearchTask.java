@@ -44,7 +44,6 @@ public class PathwaySearchTask implements ObservableTask {
 					results.add(path);
 				}
 			}
-			
 		}
 	}
 	
