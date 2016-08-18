@@ -7,11 +7,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.ws.http.HTTPException;
 
+import de.mpg.biochem.cytokegg.internal.Pathway;
 import de.mpg.biochem.cytokegg.internal.util.Item;
 
 public class KeggService {
@@ -57,58 +60,12 @@ public class KeggService {
 		return request(url);
 	}
 	
-	public Map<String, List<String>> mapIds(String[] targets, String[] genes){
-		Map<String,List<String>> mappedGenes = new HashMap<String,List<String>>();
-		for(String target : targets){
-			Map<String, List<String>> map = mapIds(target, genes);
-			for(String key : map.keySet()){
-				if(mappedGenes.containsKey(key)){
-					List<String> mainLst = mappedGenes.get(key);
-					List<String> lst = map.get(key);
-					for(String s : lst){
-						if(!mainLst.contains(s))
-							mainLst.add(s);
-					}
-    			}else{
-    				mappedGenes.put(key, map.get(key));
-    			}
-			}
-		}
-		return mappedGenes;
-	}
-	
-	public Map<String, List<String>> mapIds(String target, String[] genes){
-		Map<String,List<String>> mapedGenes = new HashMap<String,List<String>>();
+	public List<Item> getOrganismIds(String org, String target) throws IOException{
 		
-		String query = "";
-		for(String gene : genes)
-			query += gene + "+";
+		String[] arguments = new String[]{CONV, org, target};
+		String url = addArguments(baseUrl, arguments);
 		
-		String[] arguments = new String[]{CONV, target};
-		String url = addArguments(baseUrl, arguments) + query;
-		
-		try {
-			HttpURLConnection conn = openConnection(url);
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			
-			String line = "";
-			while ((line = br.readLine()) != null){
-				String[] lineArr = line.split("\t");
-				
-				if(mapedGenes.containsKey(lineArr[0])){
-    				mapedGenes.get(lineArr[0]).add(lineArr[1]);
-    			}else{
-    				List<String> lst = new ArrayList<String>();
-    				lst.add(lineArr[1]);
-    				mapedGenes.put(lineArr[0], lst);
-    			}
-	        }
-			br.close();
-			closeConnection(conn);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return mapedGenes;
+		return request(url);
 	}
 	
 	public List<Item> getPathwaysByOrg(String org) throws IOException{
@@ -122,6 +79,52 @@ public class KeggService {
 		table.put(org, paths);
 		
 		return paths;
+	}
+	
+	public Pathway getPathway(String pathwayId) throws IOException{
+		String[] arguments = new String[]{ GET, pathwayId };
+		String url = addArguments(baseUrl, arguments);
+		
+		HttpURLConnection conn = openConnection(url);
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		
+		Pathway path = new Pathway();
+		path.setId(pathwayId);
+		
+		Set<String> genes = new HashSet<String>();
+		
+		String line = "";
+		boolean insideGenes = false;
+		while ((line = br.readLine()) != null){
+			
+			if(line.trim().length() == 0) break;
+			
+			if(line.startsWith("NAME")){
+				line = line.substring(4).trim();
+				path.setName(line);
+			}else if(line.startsWith("DESCRIPTION")){
+				line = line.substring(11).trim();
+				path.setDescription(line);
+			}else if(line.startsWith("GENE")){
+				insideGenes = true;
+				line = line.substring(4).trim();
+				
+				genes.add(line.split(" ")[0]);
+				
+			}else if(insideGenes){
+				if(line.startsWith(" ")){
+					line = line.trim();
+					genes.add(line.split(" ")[0]);
+				}else{
+					insideGenes = false;
+				}
+			}
+        }
+		br.close();
+		closeConnection(conn);
+		
+		path.setGenes(genes);
+		return path;
 	}
 	
 	public List<Item> getOrganisms() throws IOException{
