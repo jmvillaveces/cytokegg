@@ -14,6 +14,7 @@ import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
 import de.mpg.biochem.cytokegg.internal.service.KeggService;
+import de.mpg.biochem.cytokegg.internal.ui.FindPathwaysSubmenuAction;
 import de.mpg.biochem.cytokegg.internal.ui.SearchSubMenuAction;
 
 
@@ -42,11 +43,11 @@ public class CyActivator extends AbstractCyActivator {
 		
 		Properties properties = new Properties();
 		
-		//MenuAction action = new MenuAction(cyApplicationManager, "CytoKegg");
-		//registerAllServices(context, action, properties);
-		
 		SearchSubMenuAction search = new SearchSubMenuAction(cyApplicationManager);
 		registerAllServices(context, search, properties);
+		
+		FindPathwaysSubmenuAction searchPaths = new FindPathwaysSubmenuAction(cyApplicationManager);
+		registerAllServices(context, searchPaths, properties);
 		
 		//Search organisms to make UI fast
 		KeggService.getInstance().getOrganisms();
