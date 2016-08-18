@@ -22,4 +22,4 @@ Once there select the network, the field containing your identifiers, the identi
 **Supported identifiers** : uniprot, ncbi-proteinid, ncbi-geneid.
 
 # Contributing
-If you want to help and add a new feature, just create a new  pull request to merge in the `master` branch.
+If you want to help and add a new feature, just create a new  pull request to merge in the `cytoscape_3.4.0` branch.
